@@ -1,4 +1,6 @@
+import { useMemo, useState } from "react";
 import ProductListing from "./ProductListing";
+import SearchBar from "./SearchBar";
 
 const products = [
 	{
@@ -30,10 +32,66 @@ const products = [
 	},
 ];
 
+function normalizeString(originalString) {
+	return originalString.toLowerCase().replace(/ /g, "");
+}
+
 const ListingsPage = () => {
+	const [currentText, setCurrentText] = useState("");
+
+	const filteredProducts = useMemo(() => {
+		return products.filter((currentProduct) => {
+			const normalCurrentText = normalizeString(currentText);
+			/*
+            1. Does it match part of the title
+                - All letters in currentText appear somewhere in product title
+            2. Is it in the description
+                - Just needs to appear SOMEWHERE in the description
+            3. Is it the seller
+                - Needs to match exactly
+            */
+
+			let isSeller =
+				normalizeString(currentProduct.seller) === normalCurrentText;
+
+			let inDescription = normalizeString(
+				currentProduct.description
+			).includes(normalCurrentText);
+
+			const letterFreq = [];
+			for (let i = 0; i < 26; i++) letterFreq[i] = 0;
+
+			let normalTitle = normalizeString(currentProduct.title);
+			let aCode = "a".charCodeAt(0);
+
+			for (let i = 0; i < normalCurrentText.length; i++)
+				letterFreq[normalCurrentText.charCodeAt(i) - aCode]++;
+
+			console.log(letterFreq);
+
+			for (let i = 0; i < normalTitle.length; i++)
+				letterFreq[normalTitle.charCodeAt(i) - aCode]--;
+
+			console.log(letterFreq);
+
+			let inTitle = true;
+			for (let i = 0; i < 26; i++) {
+				if (letterFreq[i] > 0) {
+					inTitle = false;
+					break;
+				}
+			}
+
+			console.log(isSeller, inDescription, inTitle);
+
+			return isSeller || inDescription || inTitle;
+		});
+	}, [currentText]);
+
 	return (
 		<div>
-			{products.map((productObj) => {
+			<SearchBar onSearch={setCurrentText} />
+			{filteredProducts.map((productObj) => {
 				return (
 					<ProductListing key={productObj.id} product={productObj} />
 				);
