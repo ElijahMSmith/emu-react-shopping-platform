@@ -42,6 +42,7 @@ const ListingsPage = () => {
 	const filteredProducts = useMemo(() => {
 		return products.filter((currentProduct) => {
 			const normalCurrentText = normalizeString(currentText);
+
 			/*
             1. Does it match part of the title
                 - All letters in currentText appear somewhere in product title
@@ -67,12 +68,8 @@ const ListingsPage = () => {
 			for (let i = 0; i < normalCurrentText.length; i++)
 				letterFreq[normalCurrentText.charCodeAt(i) - aCode]++;
 
-			console.log(letterFreq);
-
 			for (let i = 0; i < normalTitle.length; i++)
 				letterFreq[normalTitle.charCodeAt(i) - aCode]--;
-
-			console.log(letterFreq);
 
 			let inTitle = true;
 			for (let i = 0; i < 26; i++) {
@@ -81,8 +78,6 @@ const ListingsPage = () => {
 					break;
 				}
 			}
-
-			console.log(isSeller, inDescription, inTitle);
 
 			return isSeller || inDescription || inTitle;
 		});
