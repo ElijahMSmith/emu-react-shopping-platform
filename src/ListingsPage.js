@@ -1,62 +1,36 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import SearchBar from "./SearchBar";
 import ProductTable from "./ProductTable";
-
-const products = [
-	{
-		id: 0,
-		title: "Widows Laptop",
-		seller: "Elijah Smith",
-		url: "https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE4LJcl?ver=3fd0&q=90&m=6&h=705&w=1253&b=%23FFFFFFFF&f=jpg&o=f&p=140&aim=true",
-		price: 499.99,
-		discount: 0.1,
-		description: "The best money can buy",
-	},
-	{
-		id: 1,
-		title: "Suitcase",
-		seller: "Isaiah Smith",
-		url: "https://i5.walmartimages.com/asr/f7f78756-9dd8-47f2-b7f1-6db17484e661.35d3bcac524972f738c8f8e13743f0b0.jpeg",
-		price: 250.0,
-		discount: 0.0,
-		description: "Big enough for any journey",
-	},
-	{
-		id: 2,
-		title: "Lamp",
-		seller: "Sheryl Smith",
-		url: "https://www.ikea.com/us/en/images/products/blidvaeder-table-lamp-off-white-ceramic-beige__1059592_pe849717_s5.jpg",
-		price: 80.0,
-		discount: 0.2,
-		description: "Intensely bright",
-	},
-];
-
-function normalizeString(originalString) {
-	return originalString.toLowerCase().replace(/ /g, "");
-}
+import axios from "axios";
+import { getRandomDiscount, getRandomName } from "./utility/randoms";
+import { normalizeString } from "./utility/strings";
 
 const ListingsPage = () => {
 	const [currentText, setCurrentText] = useState("");
+	const [products, setProducts] = useState([]);
 
-	// Until we have an API to work with, we need to fake having lots of data
-	// Here, we (only once, hence useMemo) duplicate each of our items 75 times
-	// Now, instead of three items, we have 225 and can more easily test our pagination
-	const duplicatedProducts = useMemo(() => {
-		const newProducts = [];
-
-		// Because each item still needs to have a unique id, we count up from 0 as we are duplicating
-		let idCounter = 0;
-		for (let item of products) {
-			for (let i = 0; i < 75; i++) {
-				newProducts.push({ ...item, id: idCounter++ });
-			}
-		}
-		return newProducts;
+	useEffect(() => {
+		axios
+			.get("https://fakestoreapi.com/products")
+			.then((res) => res.data)
+			.then((resProducts) => {
+				console.log(resProducts);
+				// The data that comes back doesn't have a seller or discount, so let's generate them randomly!
+				// Data doesn't always come back in the best way for handling on your frontend, so it is a common occurrence
+				// To modify it here before it gets used anywhere else
+				const mappedProducts = resProducts.map((productRaw) => {
+					return {
+						...productRaw,
+						seller: getRandomName(),
+						discount: getRandomDiscount(),
+					};
+				});
+				setProducts(mappedProducts);
+			});
 	}, []);
 
 	const filteredProducts = useMemo(() => {
-		return duplicatedProducts.filter((currentProduct) => {
+		return products.filter((currentProduct) => {
 			const normalCurrentText = normalizeString(currentText);
 
 			/*
@@ -102,7 +76,7 @@ const ListingsPage = () => {
 
 			return isSeller || inDescription || inTitle;
 		});
-	}, [currentText, duplicatedProducts]);
+	}, [currentText, products]);
 
 	return (
 		<div>

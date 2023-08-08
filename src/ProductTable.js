@@ -105,7 +105,7 @@ const ProductTable = ({ productData }) => {
 					);
 				})}
 			</div>
-			<div className="productsGridOptions">
+			<div className="productsGridOptions" style={{ margin: 20 }}>
 				<div
 					className="paginationContainer"
 					style={{ display: "flex", justifyContent: "space-between" }}
