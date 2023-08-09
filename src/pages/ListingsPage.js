@@ -2,8 +2,8 @@ import React, { useEffect, useMemo, useState } from "react";
 import SearchBar from "./SearchBar";
 import ProductTable from "./ProductTable";
 import axios from "axios";
-import { getRandomDiscount, getRandomName } from "./utility/randoms";
-import { normalizeString } from "./utility/strings";
+import { getRandomDiscount, getRandomName } from "../utility/randoms";
+import { normalizeString } from "../utility/strings";
 
 const ListingsPage = () => {
 	const [currentText, setCurrentText] = useState("");
