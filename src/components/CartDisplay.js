@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { CartContext } from "./Cart";
+import { CartContext } from "../utils/Cart";
 
 export default function CartDisplay() {
 	const [showing, setShowing] = useState(false);

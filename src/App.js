@@ -1,7 +1,7 @@
 import React from "react";
-import ListingsPage from "./ListingsPage";
-import { CartProvider } from "./Cart";
-import CartDisplay from "./CartDisplay";
+import ListingsPage from "./page/ListingsPage";
+import { CartProvider } from "./utils/Cart";
+import CartDisplay from "./components/CartDisplay";
 
 function App() {
 	return (

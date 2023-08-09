@@ -1,36 +1,18 @@
-import React, { useMemo, useState } from "react";
-import SearchBar from "./SearchBar";
-import ProductTable from "./ProductTable";
+import React, { useEffect, useMemo, useState } from "react";
+import SearchBar from "../components/SearchBar";
+import ProductTable from "../components/ProductTable";
+import axios from "axios";
+import { getRandomDiscount, getRandomName } from "../utils/randoms";
 
-const products = [
-	{
-		id: 0,
-		title: "Widows Laptop",
-		seller: "Elijah Smith",
-		url: "https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE4LJcl?ver=3fd0&q=90&m=6&h=705&w=1253&b=%23FFFFFFFF&f=jpg&o=f&p=140&aim=true",
-		price: 499.99,
-		discount: 0.1,
-		description: "The best money can buy",
-	},
-	{
-		id: 1,
-		title: "Suitcase",
-		seller: "Isaiah Smith",
-		url: "https://i5.walmartimages.com/asr/f7f78756-9dd8-47f2-b7f1-6db17484e661.35d3bcac524972f738c8f8e13743f0b0.jpeg",
-		price: 250.0,
-		discount: 0.0,
-		description: "Big enough for any journey",
-	},
-	{
-		id: 2,
-		title: "Lamp",
-		seller: "Sheryl Smith",
-		url: "https://www.ikea.com/us/en/images/products/blidvaeder-table-lamp-off-white-ceramic-beige__1059592_pe849717_s5.jpg",
-		price: 80.0,
-		discount: 0.2,
-		description: "Intensely bright",
-	},
-];
+// {
+// 	id: 0,
+// 	title: "Widows Laptop",
+// 	seller: "Elijah Smith",
+// 	url: "https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE4LJcl?ver=3fd0&q=90&m=6&h=705&w=1253&b=%23FFFFFFFF&f=jpg&o=f&p=140&aim=true",
+// 	price: 499.99,
+// 	discount: 0.1,
+// 	description: "The best money can buy",
+// },
 
 function normalizeString(originalString) {
 	return originalString.toLowerCase().replace(/ /g, "");
@@ -38,25 +20,39 @@ function normalizeString(originalString) {
 
 const ListingsPage = () => {
 	const [currentText, setCurrentText] = useState("");
+	const [products, setProducts] = useState([]);
 
-	// Until we have an API to work with, we need to fake having lots of data
-	// Here, we (only once, hence useMemo) duplicate each of our items 75 times
-	// Now, instead of three items, we have 225 and can more easily test our pagination
-	const duplicatedProducts = useMemo(() => {
-		const newProducts = [];
+	async function getAllProducts() {
+		try {
+			const res = await axios.get("https://fakestoreapi.com/products");
+			if (res.status !== 200)
+				throw Error("Received error code " + res.status, res.data);
 
-		// Because each item still needs to have a unique id, we count up from 0 as we are duplicating
-		let idCounter = 0;
-		for (let item of products) {
-			for (let i = 0; i < 75; i++) {
-				newProducts.push({ ...item, id: idCounter++ });
-			}
+			const productsList = res.data.map((product) => {
+				return {
+					id: product.id,
+					title: product.title,
+					description: product.description,
+					seller: getRandomName(),
+					url: product.image,
+					price: product.price,
+					discount: getRandomDiscount(),
+					category: product.category,
+				};
+			});
+
+			setProducts(productsList);
+		} catch (error) {
+			console.error(error);
 		}
-		return newProducts;
+	}
+
+	useEffect(() => {
+		getAllProducts();
 	}, []);
 
 	const filteredProducts = useMemo(() => {
-		return duplicatedProducts.filter((currentProduct) => {
+		return products.filter((currentProduct) => {
 			const normalCurrentText = normalizeString(currentText);
 
 			/*
@@ -102,7 +98,7 @@ const ListingsPage = () => {
 
 			return isSeller || inDescription || inTitle;
 		});
-	}, [currentText, duplicatedProducts]);
+	}, [currentText, products]);
 
 	return (
 		<div>
