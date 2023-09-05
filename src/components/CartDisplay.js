@@ -26,7 +26,7 @@ export default function CartDisplay() {
 								{item.quantity} x {item.value.title} = $
 								{(item.value.price * item.quantity).toFixed(2)}
 								<button onClick={() => removeItem(item)}>
-									Remove from Cart
+									Remove
 								</button>
 							</li>
 						))}

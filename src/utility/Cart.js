@@ -40,7 +40,6 @@ export function CartProvider({ children }) {
 
 		// Only if we don't already find the item in the cart do we append it.
 		const newList = [{ quantity: 1, value: { ...newItem } }, ...items];
-		console.log(newList);
 		setItems(newList);
 	}
 

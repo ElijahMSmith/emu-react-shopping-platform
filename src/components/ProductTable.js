@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useReducer } from "react";
 import ProductListing from "./ProductListing";
 
-const ProductTable = ({ productData }) => {
+const ProductTable = ({ productData, openInModal }) => {
 	// All these options are dependent on each other, and we have to be careful not to have a currentPage > maxPage
 	// When you notice a similar dependence or scary impossible state, think about useReducer!
 	const [paginationOptions, paginationDispatcher] = useReducer(
@@ -69,11 +69,6 @@ const ProductTable = ({ productData }) => {
 			productData.length - 1
 		);
 
-		console.log(paginationOptions);
-		console.log(
-			`Showing products ${firstIndex} - ${lastIndex} (length ${productData.length})`
-		);
-
 		// Return a new array that is a subsection of the productData array
 		return productData.slice(firstIndex, lastIndex);
 
@@ -101,6 +96,7 @@ const ProductTable = ({ productData }) => {
 						<ProductListing
 							key={productObj.id}
 							product={productObj}
+							openInModal={openInModal}
 						/>
 					);
 				})}

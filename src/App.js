@@ -1,7 +1,10 @@
 import React from "react";
-import ListingsPage from "./ListingsPage";
-import { CartProvider } from "./Cart";
-import CartDisplay from "./CartDisplay";
+import ListingsPage from "./pages/ListingsPage";
+import { CartProvider } from "./utility/Cart";
+import CartDisplay from "./components/CartDisplay";
+
+import "./globals.css";
+import "./components/component-styles.css";
 
 function App() {
 	return (

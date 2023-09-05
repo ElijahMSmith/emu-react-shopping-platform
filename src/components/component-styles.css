@@ -1,0 +1,93 @@
+.addToCartBtn {
+	background-color: #6f468f;
+	border: 1px solid black;
+	border-radius: 5px;
+	color: white;
+	width: 125px;
+	height: 45px;
+	font-size: 1.2em;
+}
+
+.addToCartBtn:hover {
+	background-color: #472c5b;
+}
+
+.modalWrapper {
+	width: 100vw;
+	height: 100vh;
+	background-color: rgba(0, 0, 0, 0.3);
+	position: fixed;
+	z-index: 10;
+	top: 0;
+	left: 0;
+}
+
+.modalWrapper.closed {
+	display: none;
+}
+
+.modalWrapper.open {
+	display: block;
+}
+
+.modalContainer {
+	width: 80vh;
+	max-height: 80vh;
+	background-color: white;
+	border-radius: 25px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	overflow: scroll;
+	padding: 25px;
+}
+
+.modalTopRow {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.modalTopRow h1 {
+	font-size: 1.6em;
+	margin: 0;
+}
+
+.modalTopRow button {
+	width: 30px;
+	height: 30px;
+	font-size: 1.2em;
+	background: none;
+	border: none;
+	cursor: pointer;
+	color: red;
+	border: 1px solid red;
+	border-radius: 100%;
+}
+
+.modalMiddleRow {
+	margin-top: 25px;
+	display: flex;
+	align-items: center;
+}
+
+.modalMiddleRow img {
+	flex: 1;
+}
+
+.modalProductDetails {
+	flex: 2;
+}
+
+.modalBottomRow {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding-top: 25px;
+}
+
+.modalButtonRow button {
+	margin-top: 25px;
+}

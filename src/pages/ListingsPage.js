@@ -1,20 +1,31 @@
 import React, { useEffect, useMemo, useState } from "react";
-import SearchBar from "./SearchBar";
-import ProductTable from "./ProductTable";
 import axios from "axios";
+
+import SearchBar from "../components/SearchBar";
+import ProductTable from "../components/ProductTable";
 import { getRandomDiscount, getRandomName } from "../utility/randoms";
 import { normalizeString } from "../utility/strings";
+import ProductModal from "../components/ProductModal";
 
 const ListingsPage = () => {
 	const [currentText, setCurrentText] = useState("");
 	const [products, setProducts] = useState([]);
+	const [expandedProduct, setExpandedProduct] = useState(null);
+
+	function openInModal(product) {
+		console.log("test");
+		setExpandedProduct(product);
+	}
+
+	function closeModal() {
+		setExpandedProduct(null);
+	}
 
 	useEffect(() => {
 		axios
 			.get("https://fakestoreapi.com/products")
 			.then((res) => res.data)
 			.then((resProducts) => {
-				console.log(resProducts);
 				// The data that comes back doesn't have a seller or discount, so let's generate them randomly!
 				// Data doesn't always come back in the best way for handling on your frontend, so it is a common occurrence
 				// To modify it here before it gets used anywhere else
@@ -80,8 +91,15 @@ const ListingsPage = () => {
 
 	return (
 		<div>
+			<ProductModal
+				openProduct={expandedProduct}
+				closeModal={closeModal}
+			/>
 			<SearchBar onSearch={setCurrentText} />
-			<ProductTable productData={filteredProducts} />
+			<ProductTable
+				productData={filteredProducts}
+				openInModal={openInModal}
+			/>
 		</div>
 	);
 };
